@@ -38,4 +38,4 @@ ansible-playbook -i inventory.ini apigee-port-check.yml
 
 雙中心服務Port檢查:
 
-ansible-playbook -i inventory.ini apigee-port-check-dr.yml 
+ansible-playbook -i inventory-dr.ini apigee-port-check-dr.yml 
