@@ -6,7 +6,7 @@ apigee-port-check.yml                  | 單中心服務Port檢查
 apigee-port-check-dr.yml               | 雙中心服務Port檢查
 
 
-# inventory 說明
+# Inventory 說明
 
 Group                   | Description
 :-----------------------|:---------------------------------------
@@ -33,7 +33,9 @@ ue_dr | DR Site New Edge UI
 cd apigee_port_check
 
 單中心服務Port檢查:
+
 ansible-playbook -i inventory.ini apigee-port-check.yml
 
 雙中心服務Port檢查:
+
 ansible-playbook -i inventory.ini apigee-port-check-dr.yml 
