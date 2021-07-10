@@ -1,0 +1,109 @@
+---
+- name: install nc
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+  - yum:
+      name: nc
+      state: latest
+
+- name: ds port check
+  hosts: ds
+  gather_facts: false
+  strategy: free
+  vars:
+    listeners: [ 2181, 2888, 3888, 7000, 9042, 9160, 7199 ] 
+    clients: "{{ groups['ds'] }}"
+  roles:
+  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
+
+- name: ds port check for client
+  hosts: ds
+  gather_facts: false
+  strategy: free
+  vars:
+    listeners: [ 2181, 9042, 9160 ]   
+    clients: "{{ groups['ms'] + groups['rpm'] + groups['qs'] + groups['ps'] }}"
+  roles:
+  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }    
+
+- name: ms port check
+  hosts: ms
+  gather_facts: false
+  strategy: free
+  vars:
+    listeners: [ 8080, 8443 ]
+    clients: "{{ groups['rpm'] + groups['qs'] + groups['ps'] + groups['dp'] + groups['sso'] + groups['ue'] }}"
+  roles:
+  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
+
+- name: rpm port check
+  hosts: rpm
+  gather_facts: false
+  strategy: free
+  vars:
+    listeners: [ 4527, 4528, 8081, 8082, 8998 ]
+    clients: "{{ groups['rpm'] }}"
+  roles:
+  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
+
+- name: rpm port check for ms
+  hosts: rpm
+  gather_facts: false
+  strategy: free
+  vars:
+    listeners: [ 4527, 4528, 8081, 8082 ]
+    clients: "{{ groups['ms'] }}"
+  roles:
+  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
+
+- name: qs port check
+  hosts: qs
+  gather_facts: false
+  strategy: free
+  vars:
+    listeners: [ 5672 ]
+    clients: "{{ groups['rpm'] + groups['qs'] }}"
+  roles:
+  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
+
+- name: qs port check for ms
+  hosts: qs
+  gather_facts: false
+  strategy: free
+  vars:
+    listeners: [ 4529, 8083 ]
+    clients: "{{ groups['ms'] }}"
+  roles:
+  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
+
+- name: ps port check
+  hosts: ps
+  gather_facts: false
+  strategy: free
+  vars:
+    listeners: [ 5432 ]
+    clients: "{{ groups['ms'] + groups['qs'] + groups['ps'] + groups['dp'] + groups['sso'] }}"
+  roles:
+  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }  
+
+- name: ps port check for ms
+  hosts: ps
+  gather_facts: false
+  strategy: free
+  vars:
+    listeners: [ 4530, 8084 ]
+    clients: "{{ groups['ms'] }}"
+  roles:
+  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }  
+
+- name: sso port check
+  hosts: sso
+  gather_facts: false
+  strategy: free
+  vars:
+    listeners: [ 9090 ]
+    clients: "{{ groups['ms'] }}"
+  roles:
+  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }  
