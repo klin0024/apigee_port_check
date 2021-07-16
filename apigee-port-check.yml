@@ -28,6 +28,16 @@
   roles:
   - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }    
 
+- name: ld port check
+  hosts: ld
+  gather_facts: false
+  strategy: free
+  vars:
+    listeners: [ 10389 ] 
+    clients: "{{ groups['ms'] }}"
+  roles:
+  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
+
 - name: ms port check
   hosts: ms
   gather_facts: false

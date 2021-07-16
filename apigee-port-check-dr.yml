@@ -36,7 +36,37 @@
     listeners: [ 2181, 9042, 9160 ]   
     clients: "{{ groups['ms_dr'] + groups['rpm_dr'] + groups['qs_dr'] + groups['ps_dr'] }}"
   roles:
-  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }      
+  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
+
+- name: ld port check
+  hosts: ld
+  gather_facts: false
+  strategy: free
+  vars:
+    listeners: [ 10389 ]   
+    clients: "{{ groups['ms'] }}"
+  roles:
+  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
+
+- name: ld port check (dr)
+  hosts: ld_dr
+  gather_facts: false
+  strategy: free
+  vars:
+    listeners: [ 10389 ]   
+    clients: "{{ groups['ms_dr'] }}"
+  roles:
+  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
+
+- name: ld port check for multi dc
+  hosts: ld:ld_dr
+  gather_facts: false
+  strategy: free
+  vars:
+    listeners: [ 10389 ]   
+    clients: "{{ groups['ld'] + groups['ld_dr'] }}"
+  roles:
+  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }         
 
 - name: ms port check
   hosts: ms
@@ -63,7 +93,7 @@
   gather_facts: false
   strategy: free
   vars:
-    listeners: [ 4526, 8080, 8443, 10389 ]
+    listeners: [ 4526, 8080, 8443 ]
     clients: "{{ groups['ms'] + groups['ms_dr'] }}"
   roles:
   - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
