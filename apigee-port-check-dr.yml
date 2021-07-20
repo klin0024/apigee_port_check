@@ -24,7 +24,7 @@
   strategy: free
   vars:
     listeners: [ 2181, 9042, 9160 ]   
-    clients: "{{ groups['ms'] + groups['rpm'] + groups['qs'] + groups['ps'] }}"
+    clients: "{{ groups['rpm'] + groups['qs'] + groups['ps'] }}"
   roles:
   - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
 
@@ -34,9 +34,29 @@
   strategy: free
   vars:
     listeners: [ 2181, 9042, 9160 ]   
-    clients: "{{ groups['ms_dr'] + groups['rpm_dr'] + groups['qs_dr'] + groups['ps_dr'] }}"
+    clients: "{{ groups['rpm_dr'] + groups['qs_dr'] + groups['ps_dr'] }}"
   roles:
   - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
+
+- name: ds port check for ms
+  hosts: ds
+  gather_facts: false
+  strategy: free
+  vars:
+    listeners: [ 2181, 9042, 9160, 7199 ]   
+    clients: "{{ groups['ms'] }}"
+  roles:
+  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
+
+- name: ds port check for ms (dr)
+  hosts: ds_dr
+  gather_facts: false
+  strategy: free
+  vars:
+    listeners: [ 2181, 9042, 9160, 7199 ]   
+    clients: "{{ groups['ms_dr'] }}"
+  roles:
+  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }  
 
 - name: ld port check
   hosts: ld
@@ -203,7 +223,7 @@
   gather_facts: false
   strategy: free
   vars:
-    listeners: [ 9090 ]
+    listeners: [ 9099 ]
     clients: "{{ groups['ms'] + groups['sso'] + groups['ms_dr'] + groups['sso_dr'] }}"
   roles:
   - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
