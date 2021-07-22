@@ -12,6 +12,7 @@
   hosts: ds
   gather_facts: false
   strategy: free
+  tags: ds
   vars:
     listeners: [ 2181, 2888, 3888, 7000, 9042, 9160, 7199 ] 
     clients: "{{ groups['ds'] }}"
@@ -22,9 +23,10 @@
   hosts: ds
   gather_facts: false
   strategy: free
+  tags: ds-cl
   vars:
     listeners: [ 2181, 9042, 9160 ]   
-    clients: "{{ groups['rpm'] + groups['qs'] + groups['ps'] }}"
+    clients: "{{ groups['rmp'] + groups['qs'] + groups['ps'] }}"
   roles:
   - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
 
@@ -32,6 +34,7 @@
   hosts: ds
   gather_facts: false
   strategy: free
+  tags: ds-ms
   vars:
     listeners: [ 2181, 9042, 9160, 7199 ]   
     clients: "{{ groups['ms'] }}"
@@ -42,6 +45,7 @@
   hosts: ld
   gather_facts: false
   strategy: free
+  tags: ld
   vars:
     listeners: [ 10389 ] 
     clients: "{{ groups['ms'] }}"
@@ -52,26 +56,29 @@
   hosts: ms
   gather_facts: false
   strategy: free
+  tags: ms
   vars:
     listeners: [ 8080, 8443 ]
-    clients: "{{ groups['rpm'] + groups['qs'] + groups['ps'] + groups['dp'] + groups['sso'] + groups['ue'] }}"
+    clients: "{{ groups['rmp'] + groups['qs'] + groups['ps'] + groups['dp'] + groups['sso'] + groups['ue'] }}"
   roles:
   - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
 
-- name: rpm port check
-  hosts: rpm
+- name: rmp port check
+  hosts: rmp
   gather_facts: false
   strategy: free
+  tags: rmp
   vars:
     listeners: [ 4527, 4528, 8081, 8082, 8998 ]
-    clients: "{{ groups['rpm'] }}"
+    clients: "{{ groups['rmp'] }}"
   roles:
   - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
 
-- name: rpm port check for ms
-  hosts: rpm
+- name: rmp port check for ms
+  hosts: rmp
   gather_facts: false
   strategy: free
+  tags: rmp-ms
   vars:
     listeners: [ 4527, 4528, 8081, 8082 ]
     clients: "{{ groups['ms'] }}"
@@ -82,9 +89,10 @@
   hosts: qs
   gather_facts: false
   strategy: free
+  tags: qs
   vars:
     listeners: [ 5672 ]
-    clients: "{{ groups['rpm'] + groups['qs'] }}"
+    clients: "{{ groups['rmp'] + groups['qs'] }}"
   roles:
   - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
 
@@ -92,6 +100,7 @@
   hosts: qs
   gather_facts: false
   strategy: free
+  tags: qs-ms
   vars:
     listeners: [ 4529, 8083 ]
     clients: "{{ groups['ms'] }}"
@@ -102,6 +111,7 @@
   hosts: ps
   gather_facts: false
   strategy: free
+  tags: ps
   vars:
     listeners: [ 5432 ]
     clients: "{{ groups['ms'] + groups['qs'] + groups['ps'] + groups['dp'] + groups['sso'] }}"
@@ -112,6 +122,7 @@
   hosts: ps
   gather_facts: false
   strategy: free
+  tags: ps-ms
   vars:
     listeners: [ 4530, 8084 ]
     clients: "{{ groups['ms'] }}"
@@ -122,6 +133,7 @@
   hosts: sso
   gather_facts: false
   strategy: free
+  tags: sso
   vars:
     listeners: [ 9099 ]
     clients: "{{ groups['ms'] }}"
