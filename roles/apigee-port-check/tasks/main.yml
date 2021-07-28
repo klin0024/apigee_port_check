@@ -2,7 +2,7 @@
 - name: Setup listener
   shell: "nc -lk -p {{ item }}"
   with_items: "{{ ports }}"
-  when: "{{ enable_listener | default(true) | bool }}"
+  when: "{{ enable_listener }}"
   async: 10
   poll: 0
 
