@@ -39,3 +39,10 @@ ansible-playbook -i inventory.ini apigee-port-check.yml
 雙中心服務Port檢查:
 
 ansible-playbook -i inventory-dr.ini apigee-port-check-dr.yml 
+
+# 參數
+
+Common Options | Value                 | Description
+:--------------|:----------------------|:------------------------
+--tags         | ex: ds,ld,ms....      | 執行部分 playbook
+--extra-vars   | enable_listener=false | 不建立 listener
