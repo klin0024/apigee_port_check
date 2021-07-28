@@ -40,7 +40,7 @@ ansible-playbook -i inventory.ini apigee-port-check.yml
 
 ansible-playbook -i inventory-dr.ini apigee-port-check-dr.yml 
 
-# 參數
+# 選項
 
 Common Options | Value                 | Description
 :--------------|:----------------------|:------------------------
