@@ -44,5 +44,5 @@ ansible-playbook -i inventory-dr.ini apigee-port-check-dr.yml
 
 Common Options | Value                 | Description
 :--------------|:----------------------|:------------------------
---tags         | ex: ds,ld,ms....      | 執行部分 playbook
+--tags         | ex: ds,ld,ms...       | 執行部分 playbook
 --extra-vars   | enable_listener=false | 不建立 listener
