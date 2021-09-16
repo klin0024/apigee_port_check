@@ -41,27 +41,38 @@
   roles:
   - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
 
+#- name: ds port check for ms
+#  hosts: ds
+#  gather_facts: false
+#  strategy: free
+#  tags: ds-ms
+#  vars:
+#    listeners: [ 2181, 9042, 9160, 7199 ]   
+#    clients: "{{ groups['ms'] }}"
+#  roles:
+#  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
+
+#- name: ds port check for ms (dr)
+#  hosts: ds_dr
+#  gather_facts: false
+#  strategy: free
+#  tags: ds-ms-dr
+#  vars:
+#    listeners: [ 2181, 9042, 9160, 7199 ]   
+#    clients: "{{ groups['ms_dr'] }}"
+#  roles:
+#  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }  
+
 - name: ds port check for ms
-  hosts: ds
+  hosts: ds:ds_dr
   gather_facts: false
   strategy: free
   tags: ds-ms
   vars:
     listeners: [ 2181, 9042, 9160, 7199 ]   
-    clients: "{{ groups['ms'] }}"
+    clients: "{{ groups['ms'] + groups['ms_dr']}}"
   roles:
   - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }
-
-- name: ds port check for ms (dr)
-  hosts: ds_dr
-  gather_facts: false
-  strategy: free
-  tags: ds-ms-dr
-  vars:
-    listeners: [ 2181, 9042, 9160, 7199 ]   
-    clients: "{{ groups['ms_dr'] }}"
-  roles:
-  - { role: apigee-port-check, ports: "{{ listeners }}", nodes: "{{ clients }}" }  
 
 - name: ld port check
   hosts: ld
